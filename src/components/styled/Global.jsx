@@ -11,6 +11,8 @@ const GlobalStyles = createGlobalStyle`
 
     :root {
         --orange-red: rgb(213, 66, 21);
+        --orange-red-hover: rgb(213, 66, 21, .8);
+        --orange-red-active: rgb(193, 56, 19);
         --black: rgb(0, 0, 0);
         --white: rgb(255, 255, 255);
         --main-font: "Source Sans 3";
@@ -19,6 +21,14 @@ const GlobalStyles = createGlobalStyle`
     body {
         font-family: var(--main-font);
         background: url(${Background});
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h1, h2, h3 {
+        font-family: "Lilita One";
     }
 `
 
