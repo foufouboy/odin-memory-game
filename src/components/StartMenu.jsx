@@ -1,33 +1,38 @@
 import { styled } from "styled-components";
 import AppIcon from "./../assets/burger-icon.png";
+import Button from "./styled/Button.jsx";
+import CenteredContainer from "./styled/CenteredContainer";
 
-export default function StartMenu({startGame}) {
+export default function StartMenu({startGameAs}) {
+
     return (
-        <StartMenuStyled>
-            <img src={AppIcon} alt="burger app icon" />
-            <h1 className="title">Yummy Yummy Memory</h1>
-            <h2 className="phrase">Are you ready to get hungry ?</h2>
-            <div className="difficulty">
-                <button 
-                    onClick={e => startGame(e)}
-                    value="easy"
-                >
-                    Easy
-                </button>
-                <button 
-                    onClick={e => startGame(e)}
-                    value="medium"
-                >
-                    Medium
-                </button>
-                <button 
-                    onClick={e => startGame(e)}
-                    value="hard"
-                >
-                    Hard
-                </button>
-            </div>
-        </StartMenuStyled>
+        <CenteredContainer>
+            <StartMenuStyled>
+                <img src={AppIcon} alt="burger app icon" />
+                <h1 className="title">Yummy Yummy Memory</h1>
+                <h2 className="phrase">Are you ready to get hungry ?</h2>
+                <div className="difficulty">
+                    <Button 
+                        onClick={e => startGameAs(e.target.value)}
+                        value="easy"
+                    >
+                        Easy
+                    </Button>
+                    <Button 
+                        onClick={e => startGameAs(e.target.value)}
+                        value="medium"
+                    >
+                        Medium
+                    </Button>
+                    <Button 
+                        onClick={e => startGameAs(e.target.value)}
+                        value="hard"
+                    >
+                        Hard
+                    </Button>
+                </div>
+            </StartMenuStyled>
+        </CenteredContainer>
     );
 }
 
@@ -64,27 +69,6 @@ const StartMenuStyled = styled.div`
     img {
         height: 80px;
         margin-bottom: 20px;
-    }
-
-    button {
-        background: var(--orange-red);
-        border: 0;
-        color: white;
-        font-family: inherit;
-        font-weight: 700;
-        font-size: 2rem;
-        padding: 5px 15px;
-        border-radius: 7px;
-        box-shadow: 1px 2px 5px rgba(100, 100, 100, .5);
-        cursor: pointer;
-        
-        &:hover {
-            background: var(--orange-red-hover);             
-        }
-
-        &:active {
-            background: var(--orange-red-active); 
-        }
     }
 
     @media (max-width: 500px) {

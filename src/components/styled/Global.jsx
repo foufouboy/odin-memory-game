@@ -15,20 +15,19 @@ const GlobalStyles = createGlobalStyle`
         --orange-red-active: rgb(193, 56, 19);
         --black: rgb(0, 0, 0);
         --white: rgb(255, 255, 255);
+        --blue: rgb(34, 150, 243);
         --main-font: "Source Sans 3";
+        --main-shadow: 1px 1px 10px rgba(100, 100, 100, .3);
     }
 
     body {
         font-family: var(--main-font);
         background: url(${Background});
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     h1, h2, h3 {
         font-family: "Lilita One";
+        letter-spacing: 1px;
     }
 `
 
