@@ -5,15 +5,21 @@ import EndMenu from "./components/EndMenu";
 
 export default function App() {
     const [gameState, setGameState] = useState({
-        actualScreen: "end",
+        actualScreen: "start",
         difficulty: "easy",
         actualScore: 0,
+        bestScore: 0,
+        sessionScore: 0,
+        inRun: 1,
     });
 
     const {
         actualScreen, 
         difficulty, 
-        actualScore } = gameState;
+        actualScore,
+        sessionScore,
+        inRun
+    } = gameState;
 
 
     const cardsNumber = 
@@ -22,12 +28,28 @@ export default function App() {
         8; // easy, default value
 
 
-    const startGameAs = (difficulty) => {
-        console.log(difficulty);
+    const incrementInRun = () => {
+        setGameState(prev => ({
+            ...prev,
+            inRun: prev.inRun + 1,
+        }));
+    }
+
+    const startNewGame = (difficulty) => {
         setGameState(prev => ({
             ...prev, 
             actualScreen: "game",
             difficulty: difficulty,
+            actualScore: 0,
+            sessionScore: 0,
+        }));
+    }
+
+    const continuePlaying = () => {
+        setGameState(prev => ({
+            ...prev,
+            actualScreen: "game",
+            sessionScore: 0, 
         }));
     }
 
@@ -35,17 +57,28 @@ export default function App() {
         case "start" :
             return (
                 <StartMenu 
-                    startGameAs={startGameAs}
+                    startGameAs={startNewGame}
                 />
             );
         case "game" :
-            return <Game difficulty={difficulty}/>;
+            return (
+                <Game 
+                    difficulty={difficulty}
+                    cardsNumber={cardsNumber}
+                    gameState={gameState}
+                    setGameState={setGameState}
+                />
+            );
         case "end" :
             return (
                 <EndMenu
-                    actualScore={8}
+                    actualScore={actualScore}
+                    sessionScore={sessionScore}
                     cardsNumber={cardsNumber}
-                    startGame={() => startGameAs(difficulty)}
+                    inRun={inRun}
+                    incrementInRun={incrementInRun}
+                    continuePlaying={continuePlaying}
+                    startGame={() => startNewGame(difficulty)}
                     quit={() => setGameState(prev => ({...prev, actualScreen: "start"}))}
                 />
             );

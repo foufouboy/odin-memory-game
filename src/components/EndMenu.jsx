@@ -3,14 +3,21 @@ import WonImg from "./../assets/win.gif";
 import LossImg from "./../assets/loss.gif";
 import Button from "./styled/Button";
 import CenteredContainer from "./styled/CenteredContainer";
+import { useState } from "react";
 
 export default function EndMenu({
     actualScore, 
+    inRun,
+    incrementInRun,
     cardsNumber,
     startGame,
-    quit
+    continuePlaying,
+    quit,
 }) {
-    const isWin = actualScore === cardsNumber;
+
+
+    const isWin = actualScore === cardsNumber * inRun;
+    console.log(inRun);
 
     return (
         <CenteredContainer>
@@ -24,10 +31,18 @@ export default function EndMenu({
                         )}
                     </h2>
                     <img src={isWin ? WonImg : LossImg} alt="patrick eating burgers" />
-                    <h3>Your final score is <span>{actualScore}</span> out of <span>{cardsNumber}</span></h3>
+                    <h3>Your final score is <span>{actualScore}</span> out of <span>{cardsNumber * inRun}</span></h3>
                 </div>
                 <div className="final-options">
-                    <Button>Keep Playing</Button>
+                    { isWin && 
+                    <Button 
+                        onClick={() => {
+                            incrementInRun();
+                            continuePlaying(); 
+                        }}>
+                        Keep Playing
+                    </Button>
+                    }
                     <Button onClick={startGame}>New Game</Button>
                     <Button onClick={quit}>Quit</Button>
                 </div>

@@ -1,16 +1,128 @@
 import { styled } from "styled-components";
 import Logo from "./../assets/burger-icon.png";
 import Card from "./Card";
-import SampleImg from "./../assets/sample-recipe.jpg";
+import apiLink from "./../api-connection";
+import {useEffect, useState} from "react";
+import { v4 as uuidv4 } from "uuid";
 
-export default function Game({difficulty}) {
-    const cards = [];
-    for (let i = 0; i < 5; i++) {
-        cards.push(<Card 
-            img={SampleImg} 
-            name="A good recipe name"
-        />);
+// Par facilité, je donne le setGameState directement,
+// mauvaise pratique. Il faut ENCAPSULER
+
+export default function Game(
+    {difficulty, 
+    cardsNumber, 
+    gameState,
+    setGameState}) {
+    const [cards, setCards] = useState([]);
+    const [slotCards, setSlotCards] = useState([]);
+
+    const slotsCardsNumber = 
+        difficulty === "hard" ? 5 :
+        difficulty === "medium" ? 4 :
+        3;
+    const { actualScore, 
+            sessionScore,
+            bestScore } = gameState;
+
+    const updateScores = () => {
+        if (actualScore + 1 > bestScore) {
+            setGameState(prev => ({...prev, bestScore: actualScore + 1})); 
+        }
+
+        setGameState(prev => ({
+                ...prev, 
+                actualScore: actualScore + 1,
+                sessionScore: sessionScore + 1,
+            }));
     }
+
+    const checkCard = (id) => {
+        setCards(cards.map(card => {
+            if (card.id === id) 
+                card.checked = true;
+            return card;
+        }));
+    }
+
+    const cardClick = (id) => {
+        const cardChecked = cards.find(card => card.id === id); 
+        const allCardsChecked = cards.every(card => {
+            return card.id !== id ?
+                card.checked :
+                true;
+        });
+
+        if (cardChecked.checked) {
+            setGameState(prev => ({...prev, actualScreen: "end"}));
+        } else {
+
+            checkCard(id);
+            updateScores();
+
+            if (allCardsChecked) {
+                setGameState(prev => ({...prev, actualScreen: "end"}));
+                return;
+            }
+
+            getNewTurn();
+        }
+    }
+
+    const fetchData = async () => {
+        const headers = {
+            "Content-type": "application/json"
+        };
+
+        try {
+            const response = await fetch(apiLink, headers);
+            const data = await response.json();
+
+            const recipes = data.hits;
+            const newCards = [];
+
+            console.log(recipes);
+
+            for (let i = 0; i < cardsNumber; i++) {
+                newCards.push({
+                    name: recipes[i].recipe.label,
+                    image: recipes[i].recipe.image,
+                    checked: false,
+                    id: uuidv4(),
+                });
+            }
+
+            setCards(newCards);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const isAlreadyIn = (cards, id) => {
+        return cards.some(card => card.id === id);
+    }
+
+    const getNewTurn = () => {
+        if (cards.length === 0) return;
+
+        const newCards = [];
+        let checked = 0;
+
+        while(newCards.length < slotsCardsNumber) {
+            const randomIndex = ~~(Math.random() * cardsNumber);
+            const randomCard = cards[randomIndex];
+
+            if (!(randomCard.checked && 
+                checked >= slotsCardsNumber - 1) &&
+                !isAlreadyIn(newCards, randomCard.id)) {
+                newCards.push(randomCard);
+                checked += +randomCard.checked;
+            }
+        }
+        setSlotCards(newCards);
+    }
+
+    useEffect(() => {fetchData()}, []);
+    useEffect(() => {getNewTurn()}, [cards])
 
     return (
         <GameStyled>
@@ -20,15 +132,25 @@ export default function Game({difficulty}) {
                     <h1>Yummy Yummy Memory</h1>
                 </div>
                 <div className="score">
-                    <p>Score: <span>2</span></p>
-                    <p>Best score: <span>2</span></p>
+                    <p>Score: <span>{actualScore}</span></p>
+                    <p>Best score: <span>{bestScore}</span></p>
                 </div>
             </header>
             <main className="game">
                 <div className="cards">
-                    {cards}
+                    {slotCards.map((e) => (
+                        <Card 
+                            img={e.image} 
+                            name={e.name}
+                            key={e.id}
+                            id={e.id}
+                            cardClick={cardClick}
+                        />
+                    ))}
                 </div>
-                <p className="cards-gotten"><span>2 </span> /8</p>
+                <p className="cards-gotten">
+                    <span>{sessionScore}</span>
+                / {cardsNumber}</p>
             </main>
         </GameStyled>
     );

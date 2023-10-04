@@ -1,8 +1,8 @@
 import { styled } from "styled-components";
 
-export default function Card({img, name}) {
+export default function Card({img, name, id, cardClick}) {
     return (
-        <CardStyled>
+        <CardStyled onClick={() => cardClick(id)}>
             <img src={img} alt="recipe-image" />
             <p>{name}</p>
         </CardStyled>
@@ -36,6 +36,11 @@ const CardStyled = styled.div`
     }
 
     @media (min-width: 1300px) {
-        width: 220px;
+        width: 250px;
+        font-size: 1.5rem;
+        
+        p {
+            padding: 5px; 
+        }
     }
 `;
