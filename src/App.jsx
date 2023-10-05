@@ -46,6 +46,7 @@ export default function App() {
             difficulty: difficulty,
             actualScore: 0,
             sessionScore: 0,
+            inRun: 1,
         }));
     }
 
