@@ -161,7 +161,7 @@ Error generating stack: `+o.message+`
     }
 
     @media (max-width: 750px) {
-        width: max(25.5vw, 128px);
+        width: max(25.5vw, 120px);
         font-size: 1.2rem;
     }
 
