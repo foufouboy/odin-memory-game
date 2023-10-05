@@ -11,6 +11,7 @@ export default function App() {
         bestScore: 0,
         sessionScore: 0,
         inRun: 1,
+        loading: true,
     });
 
     const {
@@ -18,9 +19,8 @@ export default function App() {
         difficulty, 
         actualScore,
         sessionScore,
-        inRun
+        inRun,
     } = gameState;
-
 
     const cardsNumber = 
         difficulty === "hard" ? 12 :
@@ -33,6 +33,10 @@ export default function App() {
             ...prev,
             inRun: prev.inRun + 1,
         }));
+    }
+
+    const quit = () => {
+        setGameState(prev => ({...prev, actualScreen: "start"}));
     }
 
     const startNewGame = (difficulty) => {
@@ -67,6 +71,7 @@ export default function App() {
                     cardsNumber={cardsNumber}
                     gameState={gameState}
                     setGameState={setGameState}
+                    quit={quit}
                 />
             );
         case "end" :
@@ -79,7 +84,7 @@ export default function App() {
                     incrementInRun={incrementInRun}
                     continuePlaying={continuePlaying}
                     startGame={() => startNewGame(difficulty)}
-                    quit={() => setGameState(prev => ({...prev, actualScreen: "start"}))}
+                    quit={quit}
                 />
             );
         default: 

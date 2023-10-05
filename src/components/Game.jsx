@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import Logo from "./../assets/burger-icon.png";
 import Card from "./Card";
+import LoadingScreen from "./LoadingScreen";
 import apiLink from "./../api-connection";
 import {useEffect, useState} from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -12,7 +13,8 @@ export default function Game(
     {difficulty, 
     cardsNumber, 
     gameState,
-    setGameState}) {
+    setGameState,
+    quit}) {
     const [cards, setCards] = useState([]);
     const [slotCards, setSlotCards] = useState([]);
 
@@ -22,7 +24,13 @@ export default function Game(
         3;
     const { actualScore, 
             sessionScore,
-            bestScore } = gameState;
+            bestScore,
+            loading, 
+    } = gameState;
+
+    const setLoading = (value) => {
+        setGameState(prev => ({...prev, loading: value}));
+    }
 
     const updateScores = () => {
         if (actualScore + 1 > bestScore) {
@@ -72,6 +80,7 @@ export default function Game(
         const headers = {
             "Content-type": "application/json"
         };
+        setLoading(true);
 
         try {
             const response = await fetch(apiLink, headers);
@@ -92,6 +101,7 @@ export default function Game(
             }
 
             setCards(newCards);
+            setLoading(false);
         } catch (e) {
             console.log(e);
         }
@@ -126,8 +136,9 @@ export default function Game(
 
     return (
         <GameStyled>
+            { loading && <LoadingScreen/>}
             <header>
-                <div className="logo">
+                <div className="logo" onClick={quit}>
                     <img src={Logo} alt="yummy yummy icon" />
                     <h1>Yummy Yummy Memory</h1>
                 </div>
@@ -179,6 +190,7 @@ const GameStyled = styled.div`
             display: flex;
             gap: 15px;
             align-items: center;
+            cursor: pointer;
         }
 
         .score {
@@ -204,6 +216,8 @@ const GameStyled = styled.div`
         flex-wrap: wrap;
         gap: 20px;
         padding: 50px;
+        transition: transform .7s ease;
+
     }
 
     .cards-gotten {
