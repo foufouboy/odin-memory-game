@@ -1,8 +1,11 @@
-# React + Vite
+# Yummy Yummy Memory
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Using
+- HTML/JS/CSS
+- React
+- Vite
+- styled-components
 
-Currently, two official plugins are available:
+## Goal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Create a clean card memory game using only front-end, with React as a framework and Vite as a builder.
